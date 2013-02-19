@@ -1,0 +1,43 @@
+--- vstream-client-1.2.1.1/Makefile.orig	2007-11-20 20:21:19.000000000 +0100
++++ vstream-client-1.2.1.1/Makefile	2013-02-17 20:17:13.737712374 +0100
+@@ -1,31 +1,32 @@
+ include config.mak
+ 
+-LIBNAME = libvstream-client.a
++LIBNAME = libvstream-client.la
+ 
+ SRCS = mfs.c object.c schema.c query.c util.c io.c partition.c crc.c vstream.c
+ 
+ INSTALL = install
+ 
+-OBJS	= $(SRCS:.c=.o)
++OBJS	= $(SRCS:.c=.lo)
+ INCLUDE = -I..
+ LDFLAGS += $(SOCKLIB)
+ CFLAGS  += $(INCLUDE)
++LIBTOOL = libtool
+ 
+ all:	$(LIBNAME) vstream-client
+ 
+ install:	$(LIBNAME) vstream-client
+-	$(INSTALL) -m 755 vstream-client $(BINDIR)/vstream-client
+-	$(INSTALL) -m 644 $(LIBNAME) $(LIBDIR)/$(LIBNAME)
++	$(LIBTOOL) --mode=install $(INSTALL) -m 755 vstream-client $(BINDIR)/vstream-client
++	$(LIBTOOL) --mode=install $(INSTALL) $(LIBNAME) $(LIBDIR)/$(LIBNAME)
+ 	$(INSTALL) -m 644 vstream-client.h $(INCDIR)/vstream-client.h
+ 
+-.c.o:
+-	$(CC) -c $(CFLAGS) -o $@ $<
++%.lo: %.c
++	$(LIBTOOL) --mode=compile --tag=CC $(CC) -c $(CFLAGS) -o $@ $<
+ 
+ $(LIBNAME):	$(OBJS)
+-	$(AR) r $(LIBNAME) $(OBJS)
++	$(LIBTOOL) --mode=link --tag=CC $(CC) -o $(LIBNAME) $(OBJS) -rpath $(LIBDIR)
+ 
+ vstream-client: $(LIBNAME) test-client.c
+-	$(CC) $(CFLAGS) test-client.c $(LIBNAME) -o vstream-client $(LDFLAGS)
++	$(LIBTOOL) --mode=link --tag=CC $(CC) $(LDFLAGS) $(CFLAGS) test-client.c $(LIBNAME) -o vstream-client
+ 
+ clean:
+ 	rm -f *.o *.a *~ vstream-client vstream-client.exe
