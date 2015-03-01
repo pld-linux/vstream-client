@@ -2,7 +2,7 @@ Summary:	A client library and example client for the Tivo vstream server
 Summary(pl.UTF-8):	Biblioteka kliencka i przykładowy klient serwera vstream Tivo
 Name:		vstream-client
 Version:	1.2.1.1
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Libraries
 #Source0Download: http://code.google.com/p/vstream-client/downloads/list
